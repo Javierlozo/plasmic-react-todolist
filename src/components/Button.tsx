@@ -6,13 +6,12 @@ export interface ButtonProps {
   onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
 }
 
-export function Button({ children, style }: ButtonProps) {
-  const handleClick = () => {
-    console.log("Click!");
-  };
+export function Button({ children, style, onClick }: ButtonProps) {
   return (
-    <button style={style} onClick={handleClick}>
+    <button style={style} onClick={onClick}>
       {children}
     </button>
   );
 }
+
+export default Button;

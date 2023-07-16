@@ -20,10 +20,10 @@ PLASMIC.registerComponent(Button, {
   name: 'Button',
   props: {
     verbose: 'boolean',
-    children: 'slot'
+    children: 'slot',
+    onClick: 'slot',
   }
 });
-
 
 // You can register any code components that you want to use here; see
 // https://docs.plasmic.app/learn/code-components-ref/
