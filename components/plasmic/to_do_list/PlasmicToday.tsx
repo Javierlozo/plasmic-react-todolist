@@ -21,6 +21,12 @@ import * as p from "@plasmicapp/react-web";
 import * as ph from "@plasmicapp/react-web/lib/host";
 
 import {
+  usePlasmicDataConfig,
+  executePlasmicDataOp,
+  usePlasmicDataOp,
+} from "@plasmicapp/react-web/lib/data-sources";
+
+import {
   hasVariant,
   classNames,
   wrapWithClassName,
@@ -34,9 +40,10 @@ import {
   useTrigger,
   StrictProps,
   deriveRenderOpts,
-  ensureGlobalVariants
+  ensureGlobalVariants,
 } from "@plasmicapp/react-web";
 import Button from "../../Button"; // plasmic-import: 3FMFwI6YOIw/component
+import { Fetcher } from "@plasmicapp/react-web/lib/data-sources"; // plasmic-import: LeyTUIwwAaR/codeComponent
 
 import "@plasmicapp/react-web/lib/plasmic.css";
 
@@ -96,7 +103,7 @@ function PlasmicToday__RenderFunc(props: {
 
   const $props = {
     ...args,
-    ...variants
+    ...variants,
   };
   const refsRef = React.useRef({});
   const $refs = refsRef.current;
@@ -149,7 +156,7 @@ function PlasmicToday__RenderFunc(props: {
             </h1>
             <Button
               className={classNames("__wab_instance", sty.button__nSuLt)}
-              onClick={async event => {
+              onClick={async (event) => {
                 const $steps = {};
                 $steps["goToTomorrow"] = true
                   ? (() => {
@@ -160,17 +167,17 @@ function PlasmicToday__RenderFunc(props: {
                             actionName: "navigation",
                             interactionUuid: "57pzV-Oh4",
                             componentUuid: "xkCNtN30hE",
-                            argName: "destination"
+                            argName: "destination",
                           },
                           () => `/tomorrow`
-                        )
+                        ),
                       };
                       return __wrapUserFunction(
                         {
                           type: "InteractionLoc",
                           actionName: "navigation",
                           interactionUuid: "57pzV-Oh4",
-                          componentUuid: "xkCNtN30hE"
+                          componentUuid: "xkCNtN30hE",
                         },
                         () =>
                           (({ destination }) => {
@@ -189,7 +196,7 @@ function PlasmicToday__RenderFunc(props: {
                       type: "InteractionLoc",
                       actionName: "navigation",
                       interactionUuid: "57pzV-Oh4",
-                      componentUuid: "xkCNtN30hE"
+                      componentUuid: "xkCNtN30hE",
                     },
                     $steps["goToTomorrow"]
                   );
@@ -274,7 +281,57 @@ function PlasmicToday__RenderFunc(props: {
               </React.Fragment>
             </div>
           </section>
-          <Button className={classNames("__wab_instance", sty.button__tfaz8)} />
+          <Button
+            className={classNames("__wab_instance", sty.button__tfaz8)}
+            onClick={async (event) => {
+              const $steps = {};
+              $steps["runCode"] = true
+                ? (() => {
+                    const actionArgs = {
+                      customFunction: __wrapUserFunction(
+                        {
+                          type: "InteractionArgLoc",
+                          actionName: "customFunction",
+                          interactionUuid: "4I58bqEzd",
+                          componentUuid: "xkCNtN30hE",
+                          argName: "customFunction",
+                        },
+                        () => () => {
+                          console.log("Button Clicked");
+                        }
+                      ),
+                    };
+                    return __wrapUserFunction(
+                      {
+                        type: "InteractionLoc",
+                        actionName: "customFunction",
+                        interactionUuid: "4I58bqEzd",
+                        componentUuid: "xkCNtN30hE",
+                      },
+                      () =>
+                        (({ customFunction }) => {
+                          return customFunction();
+                        })?.apply(null, [actionArgs]),
+                      actionArgs
+                    );
+                  })()
+                : undefined;
+              if (
+                typeof $steps["runCode"] === "object" &&
+                typeof $steps["runCode"].then === "function"
+              ) {
+                $steps["runCode"] = await __wrapUserPromise(
+                  {
+                    type: "InteractionLoc",
+                    actionName: "customFunction",
+                    interactionUuid: "4I58bqEzd",
+                    componentUuid: "xkCNtN30hE",
+                  },
+                  $steps["runCode"]
+                );
+              }
+            }}
+          />
         </div>
       </div>
     </React.Fragment>
@@ -286,11 +343,11 @@ const PlasmicDescendants = {
   section: ["section", "h1", "text", "ol"],
   h1: ["h1"],
   text: ["text", "ol"],
-  ol: ["ol"]
+  ol: ["ol"],
 } as const;
 type NodeNameType = keyof typeof PlasmicDescendants;
 type DescendantsType<T extends NodeNameType> =
-  typeof PlasmicDescendants[T][number];
+  (typeof PlasmicDescendants)[T][number];
 type NodeDefaultElementType = {
   root: "div";
   section: "section";
@@ -335,7 +392,7 @@ function makeNodeComponent<NodeName extends NodeNameType>(nodeName: NodeName) {
           name: nodeName,
           descendantNames: [...PlasmicDescendants[nodeName]],
           internalArgPropNames: PlasmicToday__ArgProps,
-          internalVariantPropNames: PlasmicToday__VariantProps
+          internalVariantPropNames: PlasmicToday__VariantProps,
         }),
       [props, nodeName]
     );
@@ -343,7 +400,7 @@ function makeNodeComponent<NodeName extends NodeNameType>(nodeName: NodeName) {
       variants,
       args,
       overrides,
-      forNode: nodeName
+      forNode: nodeName,
     });
   };
   if (nodeName === "root") {
@@ -373,8 +430,8 @@ export const PlasmicToday = Object.assign(
       title: "",
       description: "",
       ogImageSrc: "",
-      canonical: ""
-    }
+      canonical: "",
+    },
   }
 );
 

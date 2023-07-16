@@ -21,8 +21,7 @@ PLASMIC.registerComponent(Button, {
   props: {
     verbose: 'boolean',
     children: 'slot',
-    onClick: 'slot',
-  }
+  },
 });
 
 // You can register any code components that you want to use here; see
